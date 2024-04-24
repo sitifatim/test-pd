@@ -1,0 +1,72 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Movie Listing</title>
+    <style>
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .movie-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            grid-gap: 20px;
+            list-style-type: none;
+            padding: 0;
+        }
+
+        .movie-grid img {
+            width: 100%;
+            height: auto;
+        }
+
+        .movie-info {
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Movie Listing</h1>
+        <input type="text" id="searchInput" placeholder="Search for movies..." onkeyup="searchMovies()">
+        <h2>Popular Movie This Month</h2>
+        <div class="movie-grid" id="movieList"> 
+            {% for movie in movies %}
+            <div class="movie-info">
+                <div class="row">
+                    <a href="{% url 'movie_detail' movie.id %}">
+                        <img src="{% static movie.imgPath %}" alt="{{ movie.name }}">
+                    </a>
+                    <h3>{{ movie.name }}</h3>
+                </div>
+                <div class="row">
+                    <p>{{movie.duration}} minute</p>
+                </div>
+                <div class="row">
+                    <p>User rating: {{movie.userRating}}</p>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+    <script>
+        function searchMovies() {
+            var input, filter, movieInfos, i, movieName;
+            input = document.getElementById('searchInput');
+            filter = input.value.toUpperCase();
+            movieInfos = document.getElementsByClassName('movie-info');
+
+            for (i = 0; i < movieInfos.length; i++) {
+                movieName = movieInfos[i].getElementsByTagName('h3')[0].textContent.toUpperCase();
+                if (movieName.indexOf(filter) > -1) {
+                    movieInfos[i].style.display = '';
+                } else {
+                    movieInfos[i].style.display = 'none';
+                }
+            }
+        }
+    </script>
+</body>
+</html>
